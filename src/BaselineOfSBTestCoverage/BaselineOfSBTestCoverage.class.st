@@ -14,6 +14,6 @@ BaselineOfSBTestCoverage >> baseline: spec [
 		
 		spec 
 		package: 'SBTCExamples';
-		package: 'SBTestCoverage-Core' with: [ spec requires: 'Spy2' ]
+		package: 'SBTestCoverage' with: [ spec requires: 'Spy2' ]
 	]
 ]
