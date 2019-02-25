@@ -10,7 +10,7 @@ BaselineOfSBTestCoverage >> baseline: spec [
 	spec for: #common 
 	do: [ 
 		spec baseline: 'Spy2'
-		with: [ spec repository: 'https://github.com/ObjectProfile/Spy2/src' ].
+		with: [ spec repository: 'github://ObjectProfile/Spy2/src' ].
 		
 		spec 
 		package: 'SBTCExamples';
