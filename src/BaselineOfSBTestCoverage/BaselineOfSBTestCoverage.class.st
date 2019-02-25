@@ -13,7 +13,7 @@ BaselineOfSBTestCoverage >> baseline: spec [
 		with: [ spec repository: 'https://github.com/ObjectProfile/Spy2/src' ].
 		
 		spec 
-		package: 'SBTestCoverage-Examples';
+		package: 'SBTCExamples';
 		package: 'SBTestCoverage-Core' with: [ spec requires: #('Spy2') ]
 	]
 ]
