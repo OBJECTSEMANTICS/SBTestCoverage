@@ -3,45 +3,57 @@ Class {
 	#superclass : #S2Method,
 	#instVars : [
 		'blocks',
-		'behavior',
-		'executed',
-		'executions'
+		'executed'
 	],
 	#category : #'SBTestCoverage-Core'
 }
 
+{ #category : #accessing }
+SBMethod >> blocks [
+	^ blocks
+]
+
 { #category : #enumerating }
 SBMethod >> count: aNumber [
-	blocks do:[ :aBlock |
-		(aBlock id= aNumber) ifTrue:[ aBlock executed: true].
-	].
+	self halt.
+	blocks detect:[:block| block id = aNumber] ifFound:[ :block | 
+		self updateStateFirstBlock.
+		block executed]
 ]
 
 { #category : #initialization }
 SBMethod >> initialize [ 	
 	super initialize.
-	executions := 0.
 	blocks := OrderedCollection new.
-	behavior := Behavior new.
 	executed := false.
 ]
 
 { #category : #'as yet unclassified' }
 SBMethod >> installGhosts [
-	 | rbMethodNode instrumentor newSel aClass|
-
-	aClass := self originalMethod  methodClass.
-	[rbMethodNode := RBParser parseMethod: self originalMethod sourceCode.
-	instrumentor := SBInstrumentor new.
-	instrumentor visitNode: rbMethodNode.
-	blocks := instrumentor blocks.
-	
-	newSel := (aClass compile: rbMethodNode printString notifying: nil).
-	(aClass >> newSel) replaceLiterals: {(#metaObject -> self)}.
-	
-	 ]
+	| rbMethodNode newMethod aClass |
+	[ rbMethodNode := RBParser
+		parseMethod: self originalMethod sourceCode.
+	blocks := SBInstrumentor new
+		visitNode: rbMethodNode;
+		blocks.
+	aClass := self originalMethod methodClass.
+	newMethod := aClass compile: rbMethodNode printString notifying: nil.
+	aClass >> newMethod replaceLiterals: {(#metaObject -> self)} ]
 		on: Error
-		do: [ :e |  self uninstall ]
+		do: [ :e | self halt. self uninstall ]
+]
+
+{ #category : #'public - metrics' }
+SBMethod >> numberOfAllStatements [
+	^ self blocks inject:0 into:[:sum :block| sum + block numberOfStatements].
+	
+]
+
+{ #category : #'public - metrics' }
+SBMethod >> numberOfExecutedStatements [
+	^ (self blocks select: #wasExecuted)
+		inject: 0
+		into: [ :sum :block | sum + block numberOfStatements ]
 ]
 
 { #category : #hooks }
@@ -49,8 +61,7 @@ SBMethod >> run: methodName with: listOfArguments in: receiver [
 	| result |
 	[ 
 		S2Lock unlock.
-		executed := true.
-		executions := executions + 1.
+		self updateStateFirstBlock.
 		result := originalMethod valueWithReceiver: receiver arguments: listOfArguments.
 	] ensure: [ 
 		S2Lock lock.
@@ -60,5 +71,11 @@ SBMethod >> run: methodName with: listOfArguments in: receiver [
 
 { #category : #installing }
 SBMethod >> uninstall [
-	behavior methodDict at: self selector put: self instrumentedMethod.
+	self originalMethod methodClass methodDict at: self selector put: self originalMethod
+]
+
+{ #category : #'as yet unclassified' }
+SBMethod >> updateStateFirstBlock [
+	executed := true.
+	blocks ifNotEmpty: [ blocks first execute. ]
 ]

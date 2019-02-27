@@ -1,6 +1,10 @@
 Class {
 	#name : #SBClass,
 	#superclass : #S2Class,
+	#instVars : [
+		'methodCoverage',
+		'lineCoverage'
+	],
 	#category : #'SBTestCoverage-Core'
 }
 
