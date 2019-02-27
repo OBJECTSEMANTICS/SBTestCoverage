@@ -2,7 +2,8 @@ Class {
 	#name : #SBInstrumentor,
 	#superclass : #RBProgramNodeVisitor,
 	#instVars : [
-		'blocks'
+		'blocks',
+		'currentId'
 	],
 	#category : #'SBTestCoverage-Core'
 }
@@ -39,12 +40,13 @@ SBInstrumentor >> initialize [
 { #category : #visiting }
 SBInstrumentor >> instrumentBlock: aBlockNode [
 	self addBlock: aBlockNode.
-	aBlockNode body addNodeFirst: (self buildGhostNode: self nextId)
+	aBlockNode body addNodeFirst: (self buildGhostNode: currentId)
 ]
 
 { #category : #visiting }
 SBInstrumentor >> nextId [
-	^ blocks size + 1.
+	currentId := blocks size + 1.
+	^ currentId.
 ]
 
 { #category : #visiting }

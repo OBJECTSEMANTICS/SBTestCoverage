@@ -38,11 +38,9 @@ SBProfiler >> numberOfExecutedStatements [
 { #category : #profiling }
 SBProfiler >> profile: aBlock onPackagesMatching: regex [
 
-	[ "(S2CInstrumentator onPackagesMatching: regex) applyOn: self."
-		self startOnPackagesMatching: regex.
-		aBlock value.
+	[ (S2CInstrumentator onPackagesMatching: regex) applyOn: self.
 		self allMethods do:#installGhosts.
-		"aBlock value."
+		aBlock value.
 	 ] ensure: [ 
 		self allMethods do:#uninstall.
 		self stop.].

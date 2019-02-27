@@ -2,8 +2,7 @@ Class {
 	#name : #SBMethod,
 	#superclass : #S2Method,
 	#instVars : [
-		'blocks',
-		'executed'
+		'blocks'
 	],
 	#category : #'SBTestCoverage-Core'
 }
@@ -15,7 +14,6 @@ SBMethod >> blocks [
 
 { #category : #enumerating }
 SBMethod >> count: aNumber [
-	self halt.
 	blocks detect:[:block| block id = aNumber] ifFound:[ :block | 
 		self updateStateFirstBlock.
 		block executed]
@@ -25,7 +23,6 @@ SBMethod >> count: aNumber [
 SBMethod >> initialize [ 	
 	super initialize.
 	blocks := OrderedCollection new.
-	executed := false.
 ]
 
 { #category : #'as yet unclassified' }
@@ -40,7 +37,7 @@ SBMethod >> installGhosts [
 	newMethod := aClass compile: rbMethodNode printString notifying: nil.
 	aClass >> newMethod replaceLiterals: {(#metaObject -> self)} ]
 		on: Error
-		do: [ :e | self halt. self uninstall ]
+		do: [ :e | self uninstall ]
 ]
 
 { #category : #'public - metrics' }
@@ -56,19 +53,6 @@ SBMethod >> numberOfExecutedStatements [
 		into: [ :sum :block | sum + block numberOfStatements ]
 ]
 
-{ #category : #hooks }
-SBMethod >> run: methodName with: listOfArguments in: receiver [
-	| result |
-	[ 
-		S2Lock unlock.
-		self updateStateFirstBlock.
-		result := originalMethod valueWithReceiver: receiver arguments: listOfArguments.
-	] ensure: [ 
-		S2Lock lock.
-	].
-	^ result.
-]
-
 { #category : #installing }
 SBMethod >> uninstall [
 	self originalMethod methodClass methodDict at: self selector put: self originalMethod
@@ -76,6 +60,5 @@ SBMethod >> uninstall [
 
 { #category : #'as yet unclassified' }
 SBMethod >> updateStateFirstBlock [
-	executed := true.
-	blocks ifNotEmpty: [ blocks first execute. ]
+	blocks ifNotEmpty: [ blocks first executed. ]
 ]
