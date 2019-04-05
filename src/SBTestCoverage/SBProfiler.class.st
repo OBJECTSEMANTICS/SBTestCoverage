@@ -9,6 +9,18 @@ SBProfiler class >> spyClassForPackage [
 	^ SBPackage 
 ]
 
+{ #category : #'as yet unclassified' }
+SBProfiler >> dictCoverage [
+	^ Dictionary new
+		at: 'methodCoverage' put: self methodCoverage;
+		at: 'statementCoverage' put: self statementCoverage;
+		at: 'noAllMethods' put: self allMethods size;
+		at: 'noAllStatements' put: self numberOfAllStatements;
+		at: 'noOfExecutedMethods' put: self numberOfExecutedMethods;
+		at: 'noOfExecutedStatements' put: self numberOfExecutedStatements;
+		yourself
+]
+
 { #category : #'public - metrics' }
 SBProfiler >> methodCoverage [
 	self allMethods isEmpty ifTrue: [ ^ 0 ].
