@@ -28,7 +28,11 @@ SBMethod >> initialize [
 { #category : #'as yet unclassified' }
 SBMethod >> installGhosts [
 	| rbMethodNode newMethod aClass |
-	[ rbMethodNode := RBParser
+	"self selector = #pic ifTrue: [ self halt ]."
+	self originalMethod sourceCode size > 20000 
+	ifTrue: [ self uninstall ]
+	ifFalse: [[ 
+	rbMethodNode := RBParser
 		parseMethod: self originalMethod sourceCode.
 	blocks := SBInstrumentor new
 		visitNode: rbMethodNode;
@@ -37,7 +41,7 @@ SBMethod >> installGhosts [
 	newMethod := aClass compile: rbMethodNode printString notifying: nil.
 	aClass >> newMethod replaceLiterals: {(#metaObject -> self)} ]
 		on: Error
-		do: [ :e | self uninstall ]
+		do: [ :e | self uninstall ]]
 ]
 
 { #category : #'public - metrics' }

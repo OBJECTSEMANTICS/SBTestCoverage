@@ -31,6 +31,12 @@ SBBlock >> initialize [
 	numberOfStatements := 0
 ]
 
+{ #category : #'as yet unclassified' }
+SBBlock >> noExecuted [
+	executed := false.
+	
+]
+
 { #category : #accessing }
 SBBlock >> numberOfStatements [
 	^ numberOfStatements

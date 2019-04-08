@@ -4,9 +4,32 @@ Class {
 	#category : #'SBTestCoverage-Core'
 }
 
+{ #category : #'as yet unclassified' }
+SBProfiler class >> profileInstrumented: aBlock onClass: aClass [
+	^ self new profileInstrumented: aBlock onClass: aClass
+]
+
 { #category : #hooks }
 SBProfiler class >> spyClassForPackage [ 
 	^ SBPackage 
+]
+
+{ #category : #'as yet unclassified' }
+SBProfiler >> cleanBlocks: blocks [
+	blocks do: [ :aBlock | aBlock noExecuted ]
+]
+
+{ #category : #'as yet unclassified' }
+SBProfiler >> cleanBlocksOfMethods [
+	self allMethods do: [ :aMethod | 
+		aMethod blocks do: [ :aBlock | aBlock noExecuted ]	
+	]
+]
+
+{ #category : #'as yet unclassified' }
+SBProfiler >> cleanInstrumentation [
+	self allMethods do: #uninstall.
+	self stop
 ]
 
 { #category : #'as yet unclassified' }
@@ -21,10 +44,17 @@ SBProfiler >> dictCoverage [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+SBProfiler >> executeBlock: aBlock [
+	self cleanBlocksOfMethods.
+	aBlock value
+]
+
 { #category : #'public - metrics' }
 SBProfiler >> methodCoverage [
-	self allMethods isEmpty ifTrue: [ ^ 0 ].
-	^ (100 * self numberOfExecutedMethods /self allMethods size ) asFloat.
+	self allMethods isEmpty
+		ifTrue: [ ^ 0 ].
+	^ ((100 * self numberOfExecutedMethods / self allMethods size) asFloat) round: 2
 ]
 
 { #category : #'public - metrics' }
@@ -69,8 +99,26 @@ SBProfiler >> profile: aBlock onPackagesMatching: regex [
 		self stop.].
 ]
 
+{ #category : #'as yet unclassified' }
+SBProfiler >> profileInstrumented: aBlock onClass: aClass [
+	(S2CInstrumentator onClass: aClass) applyOn: self.
+	self allMethods do: #installGhosts.
+	aBlock value
+]
+
+{ #category : #profiling }
+SBProfiler >> profileInstrumented: aBlock onPackagesMatching: regex [
+	"[" (S2CInstrumentator onPackagesMatching: regex) applyOn: self.
+	self allMethods do: #installGhosts.
+	aBlock value "]
+		ensure: [ self allMethods do: #uninstall.
+			self stop ]"
+]
+
 { #category : #'public - metrics' }
 SBProfiler >> statementCoverage [
-	self numberOfAllStatements == 0 ifTrue: [ ^ 0 ].
-	^ (100 * self numberOfExecutedStatements / self numberOfAllStatements ) asFloat.
+	self numberOfAllStatements == 0
+		ifTrue: [ ^ 0 ].
+	^ ((100 * self numberOfExecutedStatements / self numberOfAllStatements)
+		asFloat) round: 2
 ]
