@@ -56,7 +56,7 @@ SBRoassalTest >> testMethodCoverageRTBox [
 	| profiler |
 	profiler := SBProfiler profile: [ 
 		RTBox new width: 20.
-	] onPackagesMatching: 'Roassal2-Co*'.
+	] onClass: RTBox.
 	self assertNoExecutedMethods: profiler equals: 1.
 	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
 	
@@ -67,8 +67,8 @@ SBRoassalTest >> testMethodCoverageRTGroup [
 	| profiler |
 	profiler := SBProfiler profile: [ 
 		RTGroup new attributeAt: #foo ifAbsentPut: 20.
-	] onPackagesMatching: 'Roassal2-Co*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	] onClass: RTGroup.
+	self assertNoExecutedMethods: profiler equals: 2.
+	self asserMethodCoverage: profiler toNoExecutedMethods: 2.
 	
 ]
