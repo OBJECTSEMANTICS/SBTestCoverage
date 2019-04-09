@@ -66,8 +66,11 @@ SBProfiler >> numberOfAllStatements [
 
 { #category : #'public - metrics' }
 SBProfiler >> numberOfExecutedMethods [
-	^ (self allMethods collect: [ :aMethod | aMethod blocks first ] 
-	thenSelect: [:aBlock | aBlock wasExecuted]) size
+	| methodsWithBlocks |
+	methodsWithBlocks := self allMethods select: [ :aMethod | aMethod blocks isNotEmpty ].
+	^ (methodsWithBlocks 
+		collect: [ :aMethod | aMethod blocks first ]
+		thenSelect: [ :aBlock | aBlock wasExecuted ]) size 
 ]
 
 { #category : #'public - metrics' }
