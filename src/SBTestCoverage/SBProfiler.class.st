@@ -1,6 +1,10 @@
 Class {
 	#name : #SBProfiler,
 	#superclass : #S2Profiler,
+	#instVars : [
+		'regexPackages',
+		'packagesToInstrument'
+	],
 	#category : #'SBTestCoverage-Core'
 }
 
@@ -80,6 +84,18 @@ SBProfiler >> numberOfExecutedStatements [
 		into: [ :sum :method | sum + method numberOfExecutedStatements ]
 ]
 
+{ #category : #accessing }
+SBProfiler >> packages [
+	regexPackages ifNil: [ ^ super packages ].
+	packagesToInstrument
+		ifNil: [ packagesToInstrument := packages values
+				reject: [ :p | 
+					(p classes
+						select: [ :c | (c methods reject: #isNotMethodExtension) isNotEmpty ])
+						isNotEmpty and: [ (regexPackages match: p packageName) not ] ] ].
+	^ packagesToInstrument
+]
+
 { #category : #profiling }
 SBProfiler >> profile: aBlock onClass: aClass [
 
@@ -93,13 +109,13 @@ SBProfiler >> profile: aBlock onClass: aClass [
 
 { #category : #profiling }
 SBProfiler >> profile: aBlock onPackagesMatching: regex [
-
-	[ (S2CInstrumentator onPackagesMatching: regex) applyOn: self.
-		self allMethods do:#installGhosts.
-		aBlock value.
-	 ] ensure: [ 
-		self allMethods do:#uninstall.
-		self stop.].
+	regexPackages := regex.
+	[ 
+	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
+	self allMethods do: #installGhosts.
+	aBlock value ]
+		ensure: [ self allMethods do: #uninstall.
+			self stop ]
 ]
 
 { #category : #'as yet unclassified' }
@@ -111,9 +127,11 @@ SBProfiler >> profileInstrumented: aBlock onClass: aClass [
 
 { #category : #profiling }
 SBProfiler >> profileInstrumented: aBlock onPackagesMatching: regex [
-	"[" (S2CInstrumentator onPackagesMatching: regex) applyOn: self.
+	"["
+	regexPackages := regex.
+	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
 	self allMethods do: #installGhosts.
-	aBlock value "]
+	aBlock value	"]
 		ensure: [ self allMethods do: #uninstall.
 			self stop ]"
 ]
