@@ -1,10 +1,6 @@
 Class {
 	#name : #SBProfiler,
 	#superclass : #S2Profiler,
-	#instVars : [
-		'regexPackages',
-		'packagesToInstrument'
-	],
 	#category : #'SBTestCoverage-Core'
 }
 
@@ -54,6 +50,11 @@ SBProfiler >> executeBlock: aBlock [
 	aBlock value
 ]
 
+{ #category : #'as yet unclassified' }
+SBProfiler >> injectCodeToMethods [
+	self allMethods select: #isNotMethodExtension thenDo: #installGhosts.
+]
+
 { #category : #'public - metrics' }
 SBProfiler >> methodCoverage [
 	self allMethods isEmpty
@@ -84,23 +85,12 @@ SBProfiler >> numberOfExecutedStatements [
 		into: [ :sum :method | sum + method numberOfExecutedStatements ]
 ]
 
-{ #category : #accessing }
-SBProfiler >> packages [
-	regexPackages ifNil: [ ^ super packages ].
-	packagesToInstrument
-		ifNil: [ packagesToInstrument := packages values
-				reject: [ :p | 
-					(p classes
-						select: [ :c | (c methods reject: #isNotMethodExtension) isNotEmpty ])
-						isNotEmpty and: [ (regexPackages match: p packageName) not ] ] ].
-	^ packagesToInstrument
-]
-
 { #category : #profiling }
 SBProfiler >> profile: aBlock onClass: aClass [
 
 	[ (S2CInstrumentator onClass: aClass) applyOn: self.
-		self allMethods do:#installGhosts.
+	self injectCodeToMethods.
+		"self allMethods do:#installGhosts."
 		aBlock value.
 	 ] ensure: [ 
 		self allMethods do:#uninstall.
@@ -109,10 +99,10 @@ SBProfiler >> profile: aBlock onClass: aClass [
 
 { #category : #profiling }
 SBProfiler >> profile: aBlock onPackagesMatching: regex [
-	regexPackages := regex.
 	[ 
 	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
-	self allMethods do: #installGhosts.
+	self injectCodeToMethods.
+	"self allMethods do: #installGhosts."
 	aBlock value ]
 		ensure: [ self allMethods do: #uninstall.
 			self stop ]
@@ -121,19 +111,16 @@ SBProfiler >> profile: aBlock onPackagesMatching: regex [
 { #category : #'as yet unclassified' }
 SBProfiler >> profileInstrumented: aBlock onClass: aClass [
 	(S2CInstrumentator onClass: aClass) applyOn: self.
-	self allMethods do: #installGhosts.
+	self injectCodeToMethods.
+	"self allMethods do: #installGhosts."
 	aBlock value
 ]
 
 { #category : #profiling }
 SBProfiler >> profileInstrumented: aBlock onPackagesMatching: regex [
-	"["
-	regexPackages := regex.
 	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
-	self allMethods do: #installGhosts.
-	aBlock value	"]
-		ensure: [ self allMethods do: #uninstall.
-			self stop ]"
+	self injectCodeToMethods.
+	aBlock value	
 ]
 
 { #category : #'public - metrics' }
