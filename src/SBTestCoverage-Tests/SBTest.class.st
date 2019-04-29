@@ -6,7 +6,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBTest >> asserMethodCoverage: profiler toNoExecutedMethods: aNumber [
-	self assert: profiler methodCoverage closeTo: (100 * aNumber / profiler allMethods size) asFloat
+	self assert: profiler methodCoverage closeTo: ((100 * aNumber / profiler allMethods size) asFloat round: 2)
 ]
 
 { #category : #asserting }

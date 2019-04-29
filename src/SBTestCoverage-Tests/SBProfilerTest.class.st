@@ -57,7 +57,7 @@ SBProfilerTest >> testMethodCoverage [
 ]
 
 { #category : #tests }
-SBProfilerTest >> testProfileOnClass [
+SBProfilerTest >> testProfileOnPackagesMatching [
 	| profiler |
 	profiler := SBProfiler profile: [ 
 		SBCounting new.	
