@@ -20,7 +20,8 @@ SBTest >> assertNoExecutedMethods: profiler equals: aNumber [
 ]
 
 { #category : #running }
-SBTest >> tearDown [ 
-	S2Lock value: false.
-	S2Context value: nil
+SBTest >> tearDown [
+	super tearDown.
+	"S2Lock value: false.
+	S2Context value: nil"
 ]

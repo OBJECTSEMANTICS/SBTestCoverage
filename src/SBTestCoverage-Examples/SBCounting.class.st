@@ -46,13 +46,13 @@ SBCounting >> methWithArguments: aList [
 SBCounting >> methWithComposeBlocks [
 	| list selectedNumbers |
 	selectedNumbers := OrderedCollection new.
-	list := { 1. 4. 6. 7. 8. 15. 17. 16 }.
-	list select: [ :aNum | aNum odd ]
-	thenDo: [ :aNum | 
-		aNum > 10 ifTrue: [ 
-			selectedNumbers add: aNum
-		] ].
-	^ selectedNumbers 
+	list := #(1 4 6 7 8 15 17 16).
+	list
+		select: [ :aNum | aNum odd ]
+		thenDo: [ :aNum | 
+			aNum > 10
+				ifTrue: [ selectedNumbers add: aNum ] ].
+	^ selectedNumbers
 ]
 
 { #category : #'as yet unclassified' }

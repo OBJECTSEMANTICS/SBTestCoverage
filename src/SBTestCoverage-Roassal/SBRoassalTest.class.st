@@ -1,7 +1,7 @@
 Class {
 	#name : #SBRoassalTest,
 	#superclass : #SBTest,
-	#category : #SBTestCoverageRoassal
+	#category : #'SBTestCoverage-Roassal'
 }
 
 { #category : #tests }

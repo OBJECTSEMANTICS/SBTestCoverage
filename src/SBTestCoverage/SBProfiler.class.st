@@ -85,7 +85,7 @@ SBProfiler >> cleanBlocksOfMethods [
 
 { #category : #'as yet unclassified' }
 SBProfiler >> cleanInstrumentation [
-	self allMethods do: #uninstall.
+	self allMethods do: [:meth | meth uninstall]
 	"self stop"
 ]
 
@@ -109,7 +109,7 @@ SBProfiler >> executeBlock: aBlock [
 
 { #category : #'as yet unclassified' }
 SBProfiler >> injectCodeToMethods [
-	self allMethods select: #isNotMethodExtension thenDo: #installGhosts.
+	(self allMethods select: [:meth | meth isNotMethodExtension]) do: [:meth | meth installGhosts]
 ]
 
 { #category : #'public - metrics' }
