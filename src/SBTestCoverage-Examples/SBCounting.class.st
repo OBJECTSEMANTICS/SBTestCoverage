@@ -1,7 +1,7 @@
 Class {
 	#name : #SBCounting,
 	#superclass : #Object,
-	#category : #SBTCExamples
+	#category : #'SBTestCoverage-Examples'
 }
 
 { #category : #'as yet unclassified' }

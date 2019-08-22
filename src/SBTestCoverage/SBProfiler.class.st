@@ -1,8 +1,65 @@
 Class {
 	#name : #SBProfiler,
-	#superclass : #S2Profiler,
+	#superclass : #Profiler,
 	#category : #'SBTestCoverage-Core'
 }
+
+{ #category : #hooks }
+SBProfiler class >> profile: aBlock forClassNamed: className [
+	| messageTally profiler packageSpy cls classSpy packageName |
+	cls := Smalltalk at: className.
+	profiler := self new.
+	Transcript
+		show: 'profiling...';
+		cr.
+	[ self installOnClass: cls.
+	
+	classSpy := profiler spyForClass: cls.
+	packageSpy := self spyClassForPackage new.
+	packageSpy classAt: className put: classSpy.
+	classSpy packageSpy: packageSpy.
+	profiler addPackage: packageSpy.
+	profiler injectCodeToMethods.
+	profiler beforeProfiling.
+	aBlock value.
+	profiler afterProfiling ]
+		ensure: [ self removeFromClass: cls ].
+	Transcript
+		show: 'ended...';
+		cr.
+	^ profiler
+]
+
+{ #category : #hooks }
+SBProfiler class >> profile: aBlock inPackagesMatching: regexp [
+	| profiler messageTally tally |
+	Transcript
+		show: 'profiling...';
+		cr.
+	[ self installOnPackagesMatching: regexp.
+	profiler := self gatherForPackagesMatching: regexp.
+	profiler injectCodeToMethods.
+	profiler beforeProfiling.
+	aBlock value.
+	profiler afterProfiling ]
+		ensure: [ self removeFromPackagesMatching: regexp ].
+	Transcript
+		show: 'ended...';
+		cr.
+	profiler setIfNecessaryTimeAndCallGraphFrom: aBlock.
+	profiler checkInvariant.
+	^ profiler
+]
+
+{ #category : #'as yet unclassified' }
+SBProfiler class >> profile: aBlock onClass: cls [
+^ self profile: aBlock forClassNamed: cls name
+]
+
+{ #category : #hooks }
+SBProfiler class >> profile: aBlock onPackagesMatching: regexp [
+	^ self profile: aBlock inPackagesMatching: regexp
+]
 
 { #category : #'as yet unclassified' }
 SBProfiler class >> profileInstrumented: aBlock onClass: aClass [
@@ -29,7 +86,7 @@ SBProfiler >> cleanBlocksOfMethods [
 { #category : #'as yet unclassified' }
 SBProfiler >> cleanInstrumentation [
 	self allMethods do: #uninstall.
-	self stop
+	"self stop"
 ]
 
 { #category : #'as yet unclassified' }
@@ -87,40 +144,42 @@ SBProfiler >> numberOfExecutedStatements [
 
 { #category : #profiling }
 SBProfiler >> profile: aBlock onClass: aClass [
-
-	[ (S2CInstrumentator onClass: aClass) applyOn: self.
+	self halt.
+	"[ (S2CInstrumentator onClass: aClass) applyOn: self.
 	self injectCodeToMethods.
-		"self allMethods do:#installGhosts."
-		aBlock value.
-	 ] ensure: [ 
-		self allMethods do:#uninstall.
-		self stop.].
+	""self allMethods do:#installGhosts.""
+	aBlock value ]
+		ensure: [ self allMethods do: #uninstall.
+			self stop ]"
 ]
 
 { #category : #profiling }
 SBProfiler >> profile: aBlock onPackagesMatching: regex [
-	[ 
-	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
+	self halt.
+	"[ (S2CInstrumentator onPackagesMatching: regex) applyOn: self.
 	self injectCodeToMethods.
-	"self allMethods do: #installGhosts."
+	"
+	"self allMethods do: #installGhosts	""
 	aBlock value ]
 		ensure: [ self allMethods do: #uninstall.
-			self stop ]
+			self stop ]"
 ]
 
 { #category : #'as yet unclassified' }
 SBProfiler >> profileInstrumented: aBlock onClass: aClass [
-	(S2CInstrumentator onClass: aClass) applyOn: self.
+	self halt.
+	"(S2CInstrumentator onClass: aClass) applyOn: self.
 	self injectCodeToMethods.
-	"self allMethods do: #installGhosts."
-	aBlock value
+	""self allMethods do: #installGhosts.""
+	aBlock value"
 ]
 
 { #category : #profiling }
 SBProfiler >> profileInstrumented: aBlock onPackagesMatching: regex [
-	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
+	self halt.
+	"(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
 	self injectCodeToMethods.
-	aBlock value	
+	aBlock value"
 ]
 
 { #category : #'public - metrics' }

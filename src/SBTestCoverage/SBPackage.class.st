@@ -1,6 +1,6 @@
 Class {
 	#name : #SBPackage,
-	#superclass : #S2Package,
+	#superclass : #PackageSpy,
 	#category : #'SBTestCoverage-Core'
 }
 

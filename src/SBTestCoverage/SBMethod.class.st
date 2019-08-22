@@ -1,6 +1,6 @@
 Class {
 	#name : #SBMethod,
-	#superclass : #S2Method,
+	#superclass : #MethodSpy,
 	#instVars : [
 		'blocks'
 	],
@@ -29,19 +29,20 @@ SBMethod >> initialize [
 SBMethod >> installGhosts [
 	| rbMethodNode newMethod aClass |
 	"self selector = #pic ifTrue: [ self halt ]."
-	self originalMethod sourceCode size > 20000 
-	ifTrue: [ self uninstall ]
-	ifFalse: [[ 
-	rbMethodNode := RBParser
-		parseMethod: self originalMethod sourceCode.
-	blocks := SBInstrumentor new
-		visitNode: rbMethodNode;
-		blocks.
-	aClass := self originalMethod methodClass.
-	newMethod := aClass compile: rbMethodNode printString notifying: nil.
-	aClass >> newMethod replaceLiterals: {(#metaObject -> self)} ]
-		on: Error
-		do: [ :e | self uninstall ]]
+	self originalMethod sourceCode size > 20000
+		ifTrue: [ self uninstall ]
+		ifFalse: [ [ rbMethodNode := RBParser
+				parseMethod: self originalMethod sourceCode.
+			blocks := SBInstrumentor new
+				visitNode: rbMethodNode;
+				blocks.
+			aClass := self originalMethod methodClass.
+			newMethod := aClass
+				compile: rbMethodNode printString
+				notifying: nil.
+			aClass >> newMethod replaceLiterals: (Array with: (#metaObject -> self)) ]
+				on: Error
+				do: [ :e | self uninstall ] ]
 ]
 
 { #category : #'public - metrics' }

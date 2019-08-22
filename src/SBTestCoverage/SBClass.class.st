@@ -1,6 +1,6 @@
 Class {
 	#name : #SBClass,
-	#superclass : #S2Class,
+	#superclass : #ClassSpy,
 	#instVars : [
 		'methodCoverage',
 		'lineCoverage'

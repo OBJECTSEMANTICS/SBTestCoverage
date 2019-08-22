@@ -1,7 +1,7 @@
 Class {
 	#name : #SBRoassalTest,
 	#superclass : #SBTest,
-	#category : #'SBTestCoverage-Tests-Core'
+	#category : #SBTestCoverageRoassal
 }
 
 { #category : #tests }
@@ -182,11 +182,11 @@ SBRoassalTest >> testCoverageRTSunburstBuilderExample [
 { #category : #tests }
 SBRoassalTest >> testCoverageRTTheme [
 	| profiler |
-	profiler := SBProfiler profile: [ 
-		RTTheme new textFont.
-	] onClass: RTTheme.
+	profiler := SBProfiler
+		profile: [ RTTheme new textFont ]
+		onClass: RTTheme.
 	self assertNoExecutedMethods: profiler equals: 2.
-	self assert: profiler numberOfExecutedStatements equals: 2.
+	self assert: profiler numberOfExecutedStatements equals: 2
 	"
 	profiler := SBProfiler profile: [ 
 		RTElement new hasNestedElements.
