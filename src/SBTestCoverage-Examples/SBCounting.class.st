@@ -1,6 +1,6 @@
 Class {
 	#name : #SBCounting,
-	#superclass : #Object,
+	#superclass : #SBObject,
 	#category : #'SBTestCoverage-Examples'
 }
 

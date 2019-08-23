@@ -1,6 +1,6 @@
 Class {
 	#name : #S2CInstrumentator,
-	#superclass : #Object,
+	#superclass : #SBObject,
 	#category : #'SBTestCoverage-Core'
 }
 
