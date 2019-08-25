@@ -5,16 +5,17 @@ Class {
 }
 
 { #category : #baselines }
-BaselineOfSBTestCoverage >> baseline: spec [ 
+BaselineOfSBTestCoverage >> baseline: spec [
 	<baseline>
-	spec for: #common 
-	do: [ 
-		spec baseline: 'Spy2'
-		with: [ spec repository: 'github://ObjectProfile/Spy2/src' ].
-		
-		spec 
-		package: 'SBTestCoverage-Examples';
-		package: 'SBTestCoverage' with: [ spec requires: 'Spy2' ];
-		package: 'SBTestCoverage-Tests' with: [ spec requires: 'SBTestCoverage' ]
-	]
+	spec
+		for: #common
+		do: [ "spec
+				baseline: 'Spy2'
+				with: [ spec repository: 'github://ObjectProfile/Spy2/src' ]."
+			spec
+				package: 'SBTestCoverage-Examples';
+				package: 'SpyCore';
+				package: 'SBTestCoverage' with: [ spec requires: 'SpyCore' ];
+				package: 'SBTestCoverage-Tests'
+					with: [ spec requires: 'SBTestCoverage' ] ]
 ]
