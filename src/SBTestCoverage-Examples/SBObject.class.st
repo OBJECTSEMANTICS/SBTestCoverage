@@ -1,5 +1,5 @@
 Class {
 	#name : #SBObject,
 	#superclass : #Object,
-	#category : #SBTestCoverage
+	#category : #'SBTestCoverage-Examples'
 }
