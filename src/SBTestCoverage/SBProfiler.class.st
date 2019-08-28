@@ -1,8 +1,24 @@
 Class {
 	#name : #SBProfiler,
 	#superclass : #S2Profiler,
+	#classInstVars : [
+		'instance'
+	],
 	#category : #'SBTestCoverage-Core'
 }
+
+{ #category : #'as yet unclassified' }
+SBProfiler class >> profile: aBlock onClass: aClass [
+	instance
+		ifNil: [ instance := self new profile: aBlock onClass: aClass ].
+	^ instance
+]
+
+{ #category : #'public - profiling' }
+SBProfiler class >> profile: aBlock onPackagesMatching: regex [
+	instance ifNil: [ instance := self new profile: aBlock onPackagesMatching: regex  ].
+	^ instance
+]
 
 { #category : #'as yet unclassified' }
 SBProfiler class >> profileInstrumented: aBlock onClass: aClass [
@@ -87,25 +103,22 @@ SBProfiler >> numberOfExecutedStatements [
 
 { #category : #profiling }
 SBProfiler >> profile: aBlock onClass: aClass [
-
-	[ (S2CInstrumentator onClass: aClass) applyOn: self.
+	"[" (S2CInstrumentator onClass: aClass) applyOn: self.
 	self injectCodeToMethods.
-		"self allMethods do:#installGhosts."
-		aBlock value.
-	 ] ensure: [ 
-		self allMethods do:#uninstall.
-		self stop.].
+	"self allMethods do:#installGhosts."
+	aBlock value "]
+		ensure: [ self allMethods do: #uninstall.
+			self stop ]"
 ]
 
 { #category : #profiling }
 SBProfiler >> profile: aBlock onPackagesMatching: regex [
-	[ 
-	(S2CInstrumentator onPackagesMatching: regex) applyOn: self.
+	"[" (S2CInstrumentator onPackagesMatching: regex) applyOn: self.
 	self injectCodeToMethods.
 	"self allMethods do: #installGhosts."
-	aBlock value ]
+	aBlock value "]
 		ensure: [ self allMethods do: #uninstall.
-			self stop ]
+			self stop ]"
 ]
 
 { #category : #'as yet unclassified' }
