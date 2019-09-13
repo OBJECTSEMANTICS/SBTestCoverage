@@ -15,7 +15,8 @@ SBRoassalTest >> testCoverageRTColorPaletteExample [
 			v ]
 		onPackagesMatching: 'Roassal2'.
 	self assert: profiler numberOfExecutedMethods > 0.
-	self assert: profiler numberOfExecutedStatements > 0
+	self assert: profiler numberOfExecutedStatements > 0.
+	self clean: profiler.
 ]
 
 { #category : #tests }
@@ -53,31 +54,30 @@ SBRoassalTest >> testCoverageRTDynamicStackedGrapherWithRTComposer [
 			composer view ]
 		onPackagesMatching: 'Roassal2'.
 	self assert: profiler numberOfExecutedMethods > 0.
-	self assert: profiler numberOfExecutedStatements > 0
+	self assert: profiler numberOfExecutedStatements > 0.
+	self clean: profiler.
 ]
 
 { #category : #tests }
 SBRoassalTest >> testCoverageRTElement [
 	| profiler |
-	profiler := SBProfiler profile: [ 
-		RTElement new.
-	] onClass: RTElement.
+	profiler := SBProfiler profile: [ RTElement new ] onClass: RTElement.
 	"profiler>>#RTElement>>#center."
 	self assertNoExecutedMethods: profiler equals: 2.
 	self assert: profiler numberOfExecutedStatements equals: 3.
-	
-	profiler := SBProfiler profile: [ 
-		RTElement new hasNestedElements.
-	] onClass: RTElement.
+	self clean: profiler.
+	profiler := SBProfiler
+		profile: [ RTElement new hasNestedElements ]
+		onClass: RTElement.
 	self assertNoExecutedMethods: profiler equals: 4.
 	self assert: profiler numberOfExecutedStatements equals: 6.
-	
-	profiler := SBProfiler profile: [ 
-		RTElement new incomingEdges.
-	] onClass: RTElement.
+	self clean: profiler.
+	profiler := SBProfiler
+		profile: [ RTElement new incomingEdges ]
+		onClass: RTElement.
 	self assertNoExecutedMethods: profiler equals: 3.
 	self assert: profiler numberOfExecutedStatements equals: 6.
-	
+	self clean: profiler.
 ]
 
 { #category : #tests }
@@ -144,7 +144,8 @@ SBRoassalTest >> testCoverageRTExperimentalSelectionExample [
 			sankey view ]
 		onPackagesMatching: 'Roassal2'.
 	self assert: profiler numberOfExecutedMethods > 0.
-	self assert: profiler numberOfExecutedStatements > 0
+	self assert: profiler numberOfExecutedStatements > 0.
+	self clean: profiler.
 ]
 
 { #category : #tests }
@@ -176,17 +177,19 @@ SBRoassalTest >> testCoverageRTSunburstBuilderExample [
 			b view ]
 		onPackagesMatching: 'Roassal2'.
 	self assert: profiler methodCoverage > 0.
-	self assert: profiler statementCoverage > 0
+	self assert: profiler statementCoverage > 0.
+	self clean: profiler.
 ]
 
 { #category : #tests }
 SBRoassalTest >> testCoverageRTTheme [
 	| profiler |
-	profiler := SBProfiler profile: [ 
-		RTTheme new textFont.
-	] onClass: RTTheme.
+	profiler := SBProfiler
+		profile: [ RTTheme new textFont ]
+		onClass: RTTheme.
 	self assertNoExecutedMethods: profiler equals: 2.
 	self assert: profiler numberOfExecutedStatements equals: 2.
+	self clean: profiler.
 	"
 	profiler := SBProfiler profile: [ 
 		RTElement new hasNestedElements.
@@ -205,21 +208,21 @@ SBRoassalTest >> testCoverageRTTheme [
 { #category : #tests }
 SBRoassalTest >> testMethodCoverageRTBox [
 	| profiler |
-	profiler := SBProfiler profile: [ 
-		RTBox new trachelShapeClass.
-	] onClass: RTBox.
+	profiler := SBProfiler
+		profile: [ RTBox new trachelShapeClass ]
+		onClass: RTBox.
 	self assertNoExecutedMethods: profiler equals: 1.
 	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
-	
+	self clean: profiler.
 ]
 
 { #category : #tests }
 SBRoassalTest >> testMethodCoverageRTGroup [
 	| profiler |
-	profiler := SBProfiler profile: [ 
-		RTGroup new attributeAt: #foo ifAbsentPut: 20.
-	] onClass: RTGroup.
+	profiler := SBProfiler
+		profile: [ RTGroup new attributeAt: #foo ifAbsentPut: 20 ]
+		onClass: RTGroup.
 	self assertNoExecutedMethods: profiler equals: 2.
 	self asserMethodCoverage: profiler toNoExecutedMethods: 2.
-	
+	self clean: profiler.
 ]

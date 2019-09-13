@@ -19,6 +19,12 @@ SBTest >> assertNoExecutedMethods: profiler equals: aNumber [
 	self assert: profiler numberOfExecutedMethods equals: aNumber
 ]
 
+{ #category : #api }
+SBTest >> clean: aProfiler [
+	aProfiler cleanInstrumentation.
+	SBProfiler resetInstance.
+]
+
 { #category : #running }
 SBTest >> tearDown [ 
 	S2Lock value: false.

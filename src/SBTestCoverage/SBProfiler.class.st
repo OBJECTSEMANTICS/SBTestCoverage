@@ -7,6 +7,11 @@ Class {
 	#category : #'SBTestCoverage-Core'
 }
 
+{ #category : #accessing }
+SBProfiler class >> instance [ 	
+	^ instance
+]
+
 { #category : #'as yet unclassified' }
 SBProfiler class >> profile: aBlock onClass: aClass [
 	instance
@@ -23,6 +28,12 @@ SBProfiler class >> profile: aBlock onPackagesMatching: regex [
 { #category : #'as yet unclassified' }
 SBProfiler class >> profileInstrumented: aBlock onClass: aClass [
 	^ self new profileInstrumented: aBlock onClass: aClass
+]
+
+{ #category : #accessing }
+SBProfiler class >> resetInstance [ 	
+	instance ifNotNil: [ [instance cleanInstrumentation] on: AssertionFailure do: [  ]  ].
+	instance := nil
 ]
 
 { #category : #hooks }
