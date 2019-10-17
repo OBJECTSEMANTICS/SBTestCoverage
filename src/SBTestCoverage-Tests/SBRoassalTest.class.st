@@ -16,7 +16,7 @@ SBRoassalTest >> testCoverageRTColorPaletteExample [
 		onPackagesMatching: 'Roassal2'.
 	self assert: profiler numberOfExecutedMethods > 0.
 	self assert: profiler numberOfExecutedStatements > 0.
-	self clean: profiler.
+	self clean: profiler
 ]
 
 { #category : #tests }

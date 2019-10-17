@@ -12,3 +12,10 @@ Class {
 SBClass class >> spyClassForMethod [ 
 	^ SBMethod
 ]
+
+{ #category : #'public - metrics' }
+SBClass >> numberOfAllStatements [
+	^ self allMethods inject: 0 into: [ :sum :meth | 
+		sum + meth numberOfAllStatements 
+		 ]
+]

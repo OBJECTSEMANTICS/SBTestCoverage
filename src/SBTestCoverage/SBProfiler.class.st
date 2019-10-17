@@ -41,6 +41,36 @@ SBProfiler class >> spyClassForPackage [
 	^ SBPackage 
 ]
 
+{ #category : #'public - metrics' }
+SBProfiler >> calculateExecutedMethodsByClass [
+	^ (self allClassesAsDictionary keys
+		collect: [ :aClassName | aClassName -> (self calculateExecutedMethodsOf: aClassName) ])
+		asDictionary
+]
+
+{ #category : #'public - metrics' }
+SBProfiler >> calculateExecutedMethodsOf: aSymbol [
+	^ (((self classAt: aSymbol) allMethods
+		select: [ :aMethod | aMethod blocks isNotEmpty ]
+		thenCollect: [ :aMethod | aMethod blocks first ])
+		select: [ :aBlock | aBlock wasExecuted ]) size
+]
+
+{ #category : #'public - metrics' }
+SBProfiler >> calculateExecutedStatementsByClass [
+	^ (self allClassesAsDictionary keys
+		collect:
+			[ :aClassName | aClassName -> (self calculateExecutedStatementsOf: aClassName) ])
+		asDictionary
+]
+
+{ #category : #'public - metrics' }
+SBProfiler >> calculateExecutedStatementsOf: aSymbol [
+	^ (self classAt: aSymbol) allMethods
+		inject: 0
+		into: [ :sum :method | sum + method numberOfExecutedStatements ]
+]
+
 { #category : #'as yet unclassified' }
 SBProfiler >> cleanBlocks: blocks [
 	blocks do: [ :aBlock | aBlock noExecuted ]
@@ -87,6 +117,18 @@ SBProfiler >> methodCoverage [
 	self allMethods isEmpty
 		ifTrue: [ ^ 0 ].
 	^ ((100 * self numberOfExecutedMethods / self allMethods size) asFloat) round: 2
+]
+
+{ #category : #'public - metrics' }
+SBProfiler >> methodCoverage1 [
+	^ (self calculateExecutedMethodsByClass associations
+		collect: [ :assoc | 
+			| aClassName  |
+			aClassName := assoc key.
+			aClassName
+				->
+					((100 * (assoc value) / (self classAt: aClassName) allMethods size)
+								asFloat round: 2 ) ]) asDictionary
 ]
 
 { #category : #'public - metrics' }
@@ -153,4 +195,14 @@ SBProfiler >> statementCoverage [
 		ifTrue: [ ^ 0 ].
 	^ ((100 * self numberOfExecutedStatements / self numberOfAllStatements)
 		asFloat) round: 2
+]
+
+{ #category : #'public - metrics' }
+SBProfiler >> statementCoverage1 [
+	^ (self calculateExecutedStatementsByClass associations
+		collect: [ :assoc | 
+			(assoc key)
+				->
+					((100 * assoc value / (self classAt: assoc key) numberOfAllStatements)
+						asFloat round: 2) ]) asDictionary
 ]

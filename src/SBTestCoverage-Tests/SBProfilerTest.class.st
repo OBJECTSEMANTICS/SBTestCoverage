@@ -4,56 +4,61 @@ Class {
 	#category : #'SBTestCoverage-Tests-Core'
 }
 
+{ #category : #running }
+SBProfilerTest >> tearDown [ 
+	super tearDown
+]
+
 { #category : #tests }
 SBProfilerTest >> testMethodCoverage [
 	| profiler |
 	profiler := SBProfiler
 		profile: [ SBCounting new ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 0.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 0.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 0.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 0.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new one ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new anAssignment ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new main ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 2.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 2.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 2.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 2.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithCondition ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methMix ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithComposeBlocks ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(2 6 8 13 5 9 11 13) ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNoExecutedMethods: profiler equals: 1.
-	self asserMethodCoverage: profiler toNoExecutedMethods: 1.
+	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler
 ]
 
@@ -64,9 +69,9 @@ SBProfilerTest >> testProfileOnPackagesMatching [
 		profile: [ SBCounting new ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assert: profiler class: SBProfiler.
-	self assert: profiler methodCoverage equals: 0.
-	self assert: profiler statementCoverage equals: 0.
-	self clean: profiler.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: 0.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: 0.
+	self clean: profiler
 ]
 
 { #category : #tests }
@@ -76,32 +81,44 @@ SBProfilerTest >> testStatementCoverage [
 		profile: [ SBCounting new ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assert: profiler numberOfAllStatements equals: 27.
-	self assert: profiler statementCoverage equals: 0.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: 0.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new one ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 1.
+	self assertNumExecutedStatementsOf: profiler on: #SBCounting equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new anAssignment ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 2.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 2.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new main ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 2.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 2.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithCondition ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 2.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 2.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methMix ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 5.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 5.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithComposeBlocks ]
@@ -111,16 +128,25 @@ SBProfilerTest >> testStatementCoverage [
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(2 6 8 13 5 9 11 13) ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 6.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 6.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(1 4 6 7) ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 6.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 6.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(4 6 12) ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assert: profiler numberOfExecutedStatements equals: 4.
-	self clean: profiler.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 4.
+	self clean: profiler
 ]
