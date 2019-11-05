@@ -1,6 +1,6 @@
 Class {
 	#name : #SBBlock,
-	#superclass : #Object,
+	#superclass : #SBObject,
 	#instVars : [
 		'id',
 		'executed',
