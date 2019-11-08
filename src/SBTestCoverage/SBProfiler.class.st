@@ -123,12 +123,12 @@ SBProfiler >> methodCoverage [
 SBProfiler >> methodCoverage1 [
 	^ (self calculateExecutedMethodsByClass associations
 		collect: [ :assoc | 
-			| aClassName  |
+			| aClassName |
 			aClassName := assoc key.
 			aClassName
 				->
-					((100 * (assoc value) / (self classAt: aClassName) allMethods size)
-								asFloat round: 2 ) ]) asDictionary
+					((100 * assoc value / "(self classAt: aClassName)" self allMethods size)
+						asFloat round: 2) ]) asDictionary
 ]
 
 { #category : #'public - metrics' }
@@ -201,8 +201,8 @@ SBProfiler >> statementCoverage [
 SBProfiler >> statementCoverage1 [
 	^ (self calculateExecutedStatementsByClass associations
 		collect: [ :assoc | 
-			(assoc key)
+			assoc key
 				->
-					((100 * assoc value / (self classAt: assoc key) numberOfAllStatements)
+					((100 * assoc value / "(self classAt: assoc key)"self numberOfAllStatements)
 						asFloat round: 2) ]) asDictionary
 ]
