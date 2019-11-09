@@ -60,7 +60,7 @@ SBProfiler >> calculateExecutedMethodsOf: aSymbol [
 SBProfiler >> calculateExecutedStatementsByClass [
 	^ (self allClassesAsDictionary keys
 		collect:
-			[ :aClassName | aClassName -> (self calculateExecutedStatementsOf: aClassName) ])
+			[ :aClassName | aClassName -> (self calculateExecutedStatementsOf: aClassName) ] thenSelect: [:assoc | assoc value > 0])
 		asDictionary
 ]
 
