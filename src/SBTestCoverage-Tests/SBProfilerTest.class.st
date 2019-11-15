@@ -70,7 +70,7 @@ SBProfilerTest >> testProfileOnPackagesMatching [
 		onPackagesMatching: 'SBTCEx*'.
 	self assert: profiler class: SBProfiler.
 	self assertMethodCoverageOf: profiler on: #SBCounting equals: 0.
-	self assertStatementCoverageOf: profiler on: #SBCounting equals: 0.
+	self assert: profiler statementCoverage1 isEmpty.
 	self clean: profiler
 ]
 
@@ -81,12 +81,15 @@ SBProfilerTest >> testStatementCoverage [
 		profile: [ SBCounting new ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assert: profiler numberOfAllStatements equals: 27.
-	self assertStatementCoverageOf: profiler on: #SBCounting equals: 0.
+	self assert: profiler statementCoverage1 isEmpty.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new one ]
 		onPackagesMatching: 'SBTCEx*'.
-	self assertNumExecutedStatementsOf: profiler on: #SBCounting equals: 1.
+	self
+		assertNumExecutedStatementsOf: profiler
+		on: #SBCounting
+		equals: 1.
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new anAssignment ]

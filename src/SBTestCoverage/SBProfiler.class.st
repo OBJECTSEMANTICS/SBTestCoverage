@@ -126,9 +126,8 @@ SBProfiler >> methodCoverage1 [
 			| aClassName |
 			aClassName := assoc key.
 			aClassName
-				->
-					((100 * assoc value / "(self classAt: aClassName)" self allMethods size)
-						asFloat round: 2) ]) asDictionary
+				-> ((100 * assoc value / self allMethods size) asFloat round: 2)	"(self classAt: aClassName)" ])
+		asDictionary
 ]
 
 { #category : #'public - metrics' }

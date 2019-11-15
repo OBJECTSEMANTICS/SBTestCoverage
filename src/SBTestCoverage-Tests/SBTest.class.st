@@ -16,11 +16,11 @@ SBTest >> assert: aObject class: aClass [
 
 { #category : #'as yet unclassified' }
 SBTest >> assertMethodCoverageOf: profiler on: symbol equals: number [
-	|dictMethodCoverage|
+	| dictMethodCoverage |
 	dictMethodCoverage := profiler methodCoverage1.
 	self
 		assert: (dictMethodCoverage at: symbol)
-		closeTo: ((100 * number / profiler allMethods size) asFloat round: 2)
+		closeTo: ((100 * number / profiler allMethods size) asFloat round: 4)
 ]
 
 { #category : #asserting }
