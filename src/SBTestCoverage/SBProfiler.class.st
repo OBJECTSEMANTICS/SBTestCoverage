@@ -50,10 +50,12 @@ SBProfiler >> calculateExecutedMethodsByClass [
 
 { #category : #'public - metrics' }
 SBProfiler >> calculateExecutedMethodsOf: aSymbol [
-	^ (((self classAt: aSymbol) allMethods
+	| methods |
+	methods := (self classAt: aSymbol) allMethods.
+	^ ((((methods
 		select: [ :aMethod | aMethod blocks isNotEmpty ]
 		thenCollect: [ :aMethod | aMethod blocks first ])
-		select: [ :aBlock | aBlock wasExecuted ]) size
+		select: [ :aBlock | aBlock wasExecuted ]) size * 100) / methods size) asFloat
 ]
 
 { #category : #'public - metrics' }
@@ -66,9 +68,11 @@ SBProfiler >> calculateExecutedStatementsByClass [
 
 { #category : #'public - metrics' }
 SBProfiler >> calculateExecutedStatementsOf: aSymbol [
-	^ (self classAt: aSymbol) allMethods
+	| methods |
+	methods := (self classAt: aSymbol) allMethods.
+	^ (((methods
 		inject: 0
-		into: [ :sum :method | sum + method numberOfExecutedStatements ]
+		into: [ :sum :method | sum + method numberOfExecutedStatements ]) * 100) / methods size) asFloat
 ]
 
 { #category : #'as yet unclassified' }
