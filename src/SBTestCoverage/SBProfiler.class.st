@@ -52,10 +52,10 @@ SBProfiler >> calculateExecutedMethodsByClass [
 SBProfiler >> calculateExecutedMethodsOf: aSymbol [
 	| methods |
 	methods := (self classAt: aSymbol) allMethods.
-	^ ((((methods
+	^ ((methods
 		select: [ :aMethod | aMethod blocks isNotEmpty ]
 		thenCollect: [ :aMethod | aMethod blocks first ])
-		select: [ :aBlock | aBlock wasExecuted ]) size * 100) / methods size) asFloat
+		select: [ :aBlock | aBlock wasExecuted ]) size
 ]
 
 { #category : #'public - metrics' }
@@ -70,9 +70,9 @@ SBProfiler >> calculateExecutedStatementsByClass [
 SBProfiler >> calculateExecutedStatementsOf: aSymbol [
 	| methods |
 	methods := (self classAt: aSymbol) allMethods.
-	^ (((methods
+	^ (methods
 		inject: 0
-		into: [ :sum :method | sum + method numberOfExecutedStatements ]) * 100) / methods size) asFloat
+		into: [ :sum :method | sum + method numberOfExecutedStatements ])
 ]
 
 { #category : #'as yet unclassified' }
@@ -118,9 +118,11 @@ SBProfiler >> injectCodeToMethods [
 
 { #category : #'public - metrics' }
 SBProfiler >> methodCoverage [
-	self allMethods isEmpty
+	| methods |
+	methods := self allMethods.
+	methods isEmpty
 		ifTrue: [ ^ 0 ].
-	^ ((100 * self numberOfExecutedMethods / self allMethods size) asFloat) round: 2
+	^ ((100 * self numberOfExecutedMethods / methods size) asFloat) round: 3
 ]
 
 { #category : #'public - metrics' }
@@ -130,7 +132,7 @@ SBProfiler >> methodCoverage1 [
 			| aClassName |
 			aClassName := assoc key.
 			aClassName
-				-> ((100 * assoc value / self allMethods size) asFloat round: 2)	"(self classAt: aClassName)" ])
+				-> (((100 * assoc value / self allMethods size) asFloat) round: 3)	"(self classAt: aClassName)" ])
 		asDictionary
 ]
 
@@ -197,7 +199,7 @@ SBProfiler >> statementCoverage [
 	self numberOfAllStatements == 0
 		ifTrue: [ ^ 0 ].
 	^ ((100 * self numberOfExecutedStatements / self numberOfAllStatements)
-		asFloat) round: 2
+		asFloat) round: 3
 ]
 
 { #category : #'public - metrics' }
@@ -206,6 +208,6 @@ SBProfiler >> statementCoverage1 [
 		collect: [ :assoc | 
 			assoc key
 				->
-					((100 * assoc value / "(self classAt: assoc key)"self numberOfAllStatements)
-						asFloat round: 2) ]) asDictionary
+					(((100 * assoc value / "(self classAt: assoc key)"self numberOfAllStatements)
+						asFloat) round: 3) ]) asDictionary
 ]

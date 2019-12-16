@@ -22,43 +22,43 @@ SBProfilerTest >> testMethodCoverage [
 		profile: [ SBCounting new one ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((1/7) asFloat  * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new anAssignment ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new main ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 2.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 2.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((2/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithCondition ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methMix ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithComposeBlocks ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(2 6 8 13 5 9 11 13) ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assertNumExecutedMethodsOf: profiler on: #SBCounting equals: 1.
-	self assertMethodCoverageOf: profiler on: #SBCounting equals: 1.
+	self assertMethodCoverageOf: profiler on: #SBCounting equals: ((1/7) asFloat * 100 round: 3).
 	self clean: profiler
 ]
 
@@ -90,6 +90,7 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 1.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((1 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new anAssignment ]
@@ -98,6 +99,7 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 2.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((2 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new main ]
@@ -106,6 +108,7 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 2.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((2 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithCondition ]
@@ -114,6 +117,7 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 2.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((2 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methMix ]
@@ -122,11 +126,13 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 5.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((5 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithComposeBlocks ]
 		onPackagesMatching: 'SBTCEx*'.
 	self assert: profiler numberOfExecutedStatements equals: 7.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((7 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(2 6 8 13 5 9 11 13) ]
@@ -135,6 +141,7 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 6.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((6 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(1 4 6 7) ]
@@ -143,6 +150,7 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 6.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((6 / 27) asFloat * 100 round: 3).
 	self clean: profiler.
 	profiler := SBProfiler
 		profile: [ SBCounting new methWithArguments: #(4 6 12) ]
@@ -151,5 +159,6 @@ SBProfilerTest >> testStatementCoverage [
 		assertNumExecutedStatementsOf: profiler
 		on: #SBCounting
 		equals: 4.
+	self assertStatementCoverageOf: profiler on: #SBCounting equals: ((4 / 27) asFloat * 100 round: 3).
 	self clean: profiler
 ]

@@ -20,7 +20,7 @@ SBTest >> assertMethodCoverageOf: profiler on: symbol equals: number [
 	dictMethodCoverage := profiler methodCoverage1.
 	self
 		assert: (dictMethodCoverage at: symbol)
-		closeTo: ((100 * number / profiler allMethods size) asFloat round: 4)
+		closeTo: number
 ]
 
 { #category : #asserting }

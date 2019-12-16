@@ -39,7 +39,7 @@ SBMethod >> installGhosts [
 		blocks.
 	aClass := self originalMethod methodClass.
 	newMethod := aClass compile: rbMethodNode printString notifying: nil.
-	aClass >> newMethod replaceLiterals: {(#metaObject -> self)} ]
+	aClass >> newMethod replaceLiterals: (Array with: (#metaObject -> self)) ]
 		on: Error
 		do: [ :e | self uninstall ]]
 ]
@@ -64,5 +64,5 @@ SBMethod >> uninstall [
 
 { #category : #'as yet unclassified' }
 SBMethod >> updateStateFirstBlock [
-	blocks ifNotEmpty: [ blocks first executed. ]
+	blocks ifNotEmpty: [ blocks first executed ]
 ]
